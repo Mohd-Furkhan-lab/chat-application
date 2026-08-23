@@ -23,14 +23,14 @@ def login(response:Response,data : UserAuth):
     response.set_cookie(
         key="access",
         value=access_token,
-        httponly=True,
-        secure=False
+        httponly=False,
+        secure=True
     )
     response.set_cookie(
             key="refresh",
             value=refresh_token,
-            httponly=True,
-            secure=False
+            httponly=False,
+            secure=True
         )
     return {"message" : "logedin successfully"}
 
@@ -50,8 +50,8 @@ def new_access_token(request:Request,response:Response):
     response.set_cookie(
         key = "access",
         value = new_token,
-        secure = False,
-        httponly = True
+        secure = True,
+        httponly = False
 
     )
     return {"message" : "new token generated"}
