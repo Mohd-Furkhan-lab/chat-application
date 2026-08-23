@@ -17,7 +17,7 @@ app.add_middleware(
         "http://127.0.0.1:5500",
         "http://127.0.0.1:3000",
         "http://127.0.0.1:3001",
-        "https://chat-frontend-gilt-phi.vercel.app/"
+        "https://chat-frontend-gilt-phi.vercel.app"
 
     ],
     allow_credentials=True,
