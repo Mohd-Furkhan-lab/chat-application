@@ -48,9 +48,7 @@ async def user_logout(request:Request,response:Response):
 @users.post('/refresh')
 def new_access_token(request:Request,response:Response):
     token = request.cookies.get("refresh")
-    print(token)
     new_token = refresh(token)
-    print(new_token)
     response.set_cookie(
         key = "access",
         value = new_token,
