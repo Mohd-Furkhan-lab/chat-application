@@ -23,7 +23,7 @@ def create_refresh_token(user_name):
         "user_name" : user_name,
         "jti" : str(uuid.uuid4()),
         "type" : "refresh",
-        "exp" : datetime.now(UTC)+timedelta(minutes=15)
+        "exp" : datetime.now(UTC)+timedelta(days=3)
     }
     key = os.getenv("secret_key")
     token = encode(payload,key=key,algorithm="HS256")
