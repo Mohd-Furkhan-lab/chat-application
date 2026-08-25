@@ -12,6 +12,7 @@ def getallchats(token):
     if payload is None:
         raise HTTPException(401,detail="Token Missing")
     user = payload.get("user_name")
+    print(user)
     jti = payload.get("jti")
     is_expired(jti) 
     chats = get_chats(user)
