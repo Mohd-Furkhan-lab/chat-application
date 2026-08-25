@@ -4,31 +4,30 @@ from db.database import BaseModel,Session_Local
 class Conversation(BaseModel):
     __tablename__ = "convo"
     convo_id = Column(Integer,primary_key=True,autoincrement=True)
-    sender = Column(String,nullable=False)
-    reciever = Column(String,nullable=False)
+    user1 = Column(String,nullable=False)
+    user2 = Column(String,nullable=False)
 
-def get_convo(sender,reciever):
+def get_convo(user1,user2):
     with Session_Local() as db:
-        id = db.query(Conversation).filter(Conversation.sender == sender,Conversation.reciever == reciever).first()
+        id = db.query(Conversation).filter(Conversation.user1 == user1,Conversation.user2 == user2).first()
         if id:
             return id
 
 def get_chats(user):
     with Session_Local() as db:
-        sent_chats = db.query(Conversation.reciever).filter(Conversation.sender == user).all()
-        received_chats = db.query(Conversation.sender).filter(Conversation.reciever == user).all()
-        all_chats = set([chat[0] for chat in sent_chats] + [chat[0] for chat in received_chats])
-        return list(all_chats)
+        chats = db.query(Conversation.user2).filter(Conversation.user1 == user).all()
+        return [chat.user2 for chat in chats]
 
 
-def add_new_convo(sender,reciever):
+def add_new_convo(user1,user2):
     with Session_Local() as db:
         convo = Conversation(
-            sender = sender,
-            reciever = reciever
+            user1 = user1,
+            user2 = user2
         )
         db.add(convo)
         db.commit()
+        return True
 
 def clear_convo(convo_id,db):
     convo = db.query(Conversation).filter(Conversation.convo_id == convo_id).first()

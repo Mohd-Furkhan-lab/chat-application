@@ -1,5 +1,5 @@
 from fastapi import APIRouter,Request,HTTPException
-from services.chats_services import getallchats,get_chat,delete_convo
+from services.chats_services import getallchats,get_chat,delete_convo,add_user
 from services.user_services import sendmsg
 from schemas.user_schemas import Msg
 
@@ -10,11 +10,6 @@ def get_all_chats(request:Request):
     token = request.cookies.get("access")
     return getallchats(token)
 
-@chats.get('/{username}')
-def getchat(request:Request,username):
-    token = request.cookies.get("access")
-    return get_chat(token,username)
-
 @chats.post('/send-msg')
 async def send_msg(data:Msg,request:Request):
     token = request.cookies.get("access")
@@ -22,6 +17,17 @@ async def send_msg(data:Msg,request:Request):
         raise HTTPException(401,detail="Unauthorized")
     res = await sendmsg(data,token)
     return res
+
+@chats.get('/{username}')
+def getchat(request:Request,username):
+    token = request.cookies.get("access")
+    return get_chat(token,username)
+
+@chats.post('/{username}')
+def adduser(request:Request,username):
+    token = request.cookies.get("access")
+    return add_user(token,username)
+
 
 @chats.delete('/clear-chat/{username}')
 def clear_chat(request:Request,username):

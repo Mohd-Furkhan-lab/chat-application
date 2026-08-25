@@ -63,20 +63,13 @@ async def sendmsg(data,token):
     is_expired(jti)
     sender = payload.get("user_name")
     to,msg = data.to,data.msg
-
     msg_json = {"from":sender,"message" : msg}
-
-    convo = get_convo(sender,to)
-
+    user_1,user_2 = sorted([sender,to])
+    convo = get_convo(user_1,user_2)
     if convo is None:
-        add_new_convo(sender,to)
-
-    convo=get_convo(sender,to)
-
-    add_msg(convo.convo_id,msg)
-
+        raise HTTPException(404,detail="Chat not found")
+    add_msg(convo.convo_id,sender,msg)
     is_online = manager.active_connection.get(to)
-
     if is_online:
         await manager.braodcast_msg(msg_json,to)
         return {"message" : "sent successfully"}
