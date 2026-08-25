@@ -15,7 +15,6 @@ def getallchats(token):
     jti = payload.get("jti")
     is_expired(jti) 
     chats = get_chats(user)
-    print(chats)
     if chats:
         return {"chats" : chats}
     else: 

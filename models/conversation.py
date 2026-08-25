@@ -16,8 +16,6 @@ def get_convo(user1,user2):
 def get_chats(user):
     with Session_Local() as db:
         chats = db.query(Conversation).filter((Conversation.user1 == user)|(Conversation.user2 == user)).all()
-        print("SEARCHING FOR:", repr(user))
-        print("DB CHATS:", [(c.user1, c.user2) for c in chats])
         return [chat.user2 if chat.user1 == user else chat.user1 for chat in chats]
 
 
