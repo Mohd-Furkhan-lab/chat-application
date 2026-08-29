@@ -3,7 +3,10 @@ from db.database import BaseModel,engine
 from models.users import User
 from models.messages import Messages
 from models.conversation import Conversation
+from models.group_memebers import Members
+from models.group_chat import Group
 from fastapi.middleware.cors import CORSMiddleware
+
 BaseModel.metadata.create_all(engine)
 
 app = get_app()
