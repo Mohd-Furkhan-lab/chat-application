@@ -1,10 +1,9 @@
 from fastapi import HTTPException
 from db.database import Session_Local
-from models.group_chat import get_group,create_group
-from auth.jwt_token import verify_token
+from models.group_chat import get_group,create_group,update_no_of_members
+from models.group_memebers import add_member,calculate_no_members
 from models.users import get_user
-from models.group_memebers import add_member
-
+from auth.jwt_token import verify_token
 from datetime import date
 
 def add_group(data,token):
@@ -21,6 +20,8 @@ def add_group(data,token):
             if group :
                 res = add_member(db,user.user_id,group.group_id,"admin")
                 if res:
+                    count = calculate_no_members(db,group.group_id)
+                    update_no_of_members(db,count,group.group_id)
                     db.commit()
                     return {"message" : f"{user.user_name} created {data.gname} on {date.today()}"}
         except Exception as e :
