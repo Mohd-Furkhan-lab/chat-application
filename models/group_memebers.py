@@ -42,6 +42,11 @@ def remove_user(gid,uid):
         db.delete(group)
         db.commit()
 
+def delete_members(db,gid):
+    members = db.query(Members).filter(Members.group_id == gid).all()
+    db.delete(members)
+    db.flush()
+
 def calculate_no_members(db,gid):
     count = db.query(Members).filter(Members.group_id == gid).count()
     return count
