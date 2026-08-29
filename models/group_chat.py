@@ -41,3 +41,12 @@ def update_no_of_members(db,new_count,gid):
     group = db.query(Group).filter(Group.group_id == gid).filter()
     group.no_of_members = new_count
     db.flush()
+
+def change_type(is_admin,gid,new_type):
+    if is_admin:
+        with Session_Local() as db:
+            group = db.query(Group).filter(Group.group_id == gid).first()
+            group.type = new_type
+            db.commit()
+            return True
+        
