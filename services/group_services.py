@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from db.database import Session_Local
-from models.group_chat import get_group,create_group,update_no_of_members
-from models.group_memebers import add_member,calculate_no_members
+from models.group_chat import get_group,create_group,update_no_of_members,remove_group
+from models.group_memebers import add_member,calculate_no_members,get_member
 from models.users import get_user
 from auth.jwt_token import verify_token
 from datetime import date
@@ -27,4 +27,18 @@ def add_group(data,token):
         except Exception as e :
             db.rollback()
             return {"error" : f"an error occured as {e}"}
-            
+
+
+def delete_group(gid,token):
+    payload = verify_token(token)
+    if payload is None:
+        raise HTTPException(401,detail="Unauthorized")
+    user = get_user(username=payload.get("user_name"))
+    member = get_member(user.user_id)
+    if member.role != "admin":
+        raise HTTPException(403,detail="Forbidden")
+    with Session_Local() as db:
+        res = remove_group(db,member,gid)
+        if res:
+            return {"message" : "group deleted successfully"}
+     

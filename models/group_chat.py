@@ -29,7 +29,7 @@ def create_group(db,group_name,user_id,type):
     db.flush()
     return group
 
-def delete_group(db,is_admin,gid):
+def remove_group(db,is_admin,gid):
     if is_admin:
         group = db.query(Group).filter(Group.group_id == gid).first()
         if group:

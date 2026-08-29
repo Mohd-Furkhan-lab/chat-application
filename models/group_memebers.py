@@ -11,6 +11,11 @@ class Members(BaseModel):
     role = Column(String,nullable=False,default="member")
     joined_at = Column(DateTime,default=lambda: datetime.now(UTC))
 
+def get_member(uid):
+    with Session_Local() as db:
+        member = db.query(Members).filter(Members.user_id == uid).first()
+        return member
+
 def get_members(gid):
     with Session_Local() as db:
         members = (
