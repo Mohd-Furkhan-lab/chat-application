@@ -3,17 +3,19 @@ from sqlalchemy import Column,String,Integer,ForeignKey,DateTime
 from datetime import datetime,UTC
 from models.users import User
 
+
 class Members(BaseModel):
     __tablename__ = "members"
     member_id = Column(Integer,primary_key=True,autoincrement=True)
-    user_id = Column(Integer,ForeignKey("users.user_id"))
-    group_id = Column(Integer,ForeignKey("groups.group_id"))
+    user_id = Column(Integer,ForeignKey("users.user_id",ondelete="CASCADE"))
+    group_id = Column(Integer,ForeignKey("groups.group_id",ondelete="CASCADE"))
     role = Column(String,nullable=False,default="member")
     joined_at = Column(DateTime,default=lambda: datetime.now(UTC))
 
-def get_member(uid):
+
+def get_member(uid,gid):
     with Session_Local() as db:
-        member = db.query(Members).filter(Members.user_id == uid).first()
+        member = db.query(Members).filter(Members.user_id == uid,Members.group_id == gid).first()
         return member
 
 def get_members(gid):
@@ -43,8 +45,8 @@ def remove_user(gid,uid):
         db.commit()
 
 def delete_members(db,gid):
-    members = db.query(Members).filter(Members.group_id == gid).all()
-    db.delete(members)
+    db.query(Members).filter(Members.group_id == gid).delete(
+        synchronize_session=False)
     db.flush()
 
 def calculate_no_members(db,gid):

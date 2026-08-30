@@ -34,8 +34,8 @@ def user_login(data):
     is_valid = bcrypt.checkpw(password.encode('utf-8'),hash_password.encode('utf-8'))
     if is_valid is False:
         raise HTTPException(401,detail="Invalid Credentials")
-    access_token = create_access_token(is_auser.user_name)
-    refresh_token = create_refresh_token(is_auser.user_name)
+    access_token = create_access_token(is_auser.user_name,is_auser.user_id)
+    refresh_token = create_refresh_token(is_auser.user_name,is_auser.user_id)
     return access_token,refresh_token
 
 def user_info(token):

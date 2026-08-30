@@ -7,8 +7,9 @@ import uuid
 
 load_dotenv()
 
-def create_access_token(user_name):
+def create_access_token(user_name,user_id):
     payload = {
+        "user_id" : user_id,
         "user_name" : user_name,
         "jti" : str(uuid.uuid4()),
         "type" : "access",
@@ -18,8 +19,9 @@ def create_access_token(user_name):
     token = encode(payload,key=key,algorithm="HS256")
     return token
 
-def create_refresh_token(user_name):
+def create_refresh_token(user_name,user_id):
     payload = {
+        "user_id" : user_id,
         "user_name" : user_name,
         "jti" : str(uuid.uuid4()),
         "type" : "refresh",
@@ -42,6 +44,6 @@ def new_token(token):
     payload = verify_token(token)
     if payload.get("type") != "refresh":
         raise HTTPException(401,detail="Invalid Token Type")
-    new_access_token = create_access_token(payload.get("user_name"))
+    new_access_token = create_access_token(payload.get("user_name"),payload.get("user_id"))
     return new_access_token
 
