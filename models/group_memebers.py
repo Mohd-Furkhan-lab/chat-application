@@ -38,7 +38,7 @@ def add_member(db,uid,gid,role=None):
     db.flush
     return member
 
-def remove_user(gid,uid):
+def remove_group_member(gid,uid):
     with Session_Local() as db:
         group = db.query(Members).filter(Members.group_id == gid,Members.user_id == uid).first()
         db.delete(group)
