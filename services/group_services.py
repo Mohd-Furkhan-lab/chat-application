@@ -93,29 +93,6 @@ def join_public_group(payload,group):
         return {"message" : f"joined {group} successfully!"}
     
 
-def join_private_group(payload,data):
-    if payload is None:
-        raise HTTPException(401,detail="Invalid or expired token")
-    with Session_Local() as db:
-        group = get_group(db,gname=data.gname)
-        if group is None:
-            raise HTTPException(404,detail="Group Doesnt Exists")
-        member = get_member(payload.get("user_id"),group.group_id)
-        if member is None:
-            raise HTTPException(404,detail="Not a member")
-        if member.role != "admin":
-            raise HTTPException(403,detail="Forbidden")
-        user = get_user(username=data.user)
-        if user is None:
-            raise HTTPException(404,detail="User Doesnt Exists")
-        is_already_member = get_member(user.user_id,group.group_id)
-        if is_already_member:
-            raise HTTPException(403,detail="Already A Memeber")
-        res = add_member(db,user.user_id,group.group_id,"user")
-        db.commit()
-        if res is None:
-            raise HTTPException(500,detail="Internal Server Error")
-        return {"message":f"joined {group} successfully!"}
 
 
         

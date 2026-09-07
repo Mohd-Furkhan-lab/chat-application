@@ -21,7 +21,7 @@ def get_member(uid,gid):
 def get_members(gid):
     with Session_Local() as db:
         members = (
-            db.query(User.user_name)
+            db.query(User.user_name,Members.joined_at)
             .join(Members, Members.user_id == User.user_id)
             .filter(Members.group_id == gid)
             .all()
