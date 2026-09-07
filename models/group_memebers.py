@@ -38,11 +38,18 @@ def add_member(db,uid,gid,role=None):
     db.flush
     return member
 
+def update_user_role(db,uid,gid,new_role):
+    member = db.query(Members).filter(Members.user_id == uid,Members.group_id == gid)
+    member.role = new_role
+    db.flush()
+    return member
+
 def remove_group_member(gid,uid):
     with Session_Local() as db:
-        group = db.query(Members).filter(Members.group_id == gid,Members.user_id == uid).first()
-        db.delete(group)
+        member = db.query(Members).filter(Members.group_id == gid,Members.user_id == uid).first()
+        db.delete(member)
         db.commit()
+        return member
 
 def delete_members(db,gid):
     db.query(Members).filter(Members.group_id == gid).delete(
