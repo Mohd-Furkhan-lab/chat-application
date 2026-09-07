@@ -2,15 +2,11 @@ from fastapi import HTTPException
 from models.conversation import get_chats,get_convo,clear_convo,add_new_convo
 from models.messages import get_msg
 from models.users import get_user
-from auth.jwt_token import verify_token
 from services.user_services import is_expired
 from db.database import Session_Local
 
 
-def getallchats(token):
-    payload = verify_token(token)
-    if payload is None:
-        raise HTTPException(401,detail="Token Missing")
+def getallchats(payload):
     user = payload.get("user_name")
     jti = payload.get("jti")
     is_expired(jti) 
@@ -20,10 +16,7 @@ def getallchats(token):
     else: 
         raise HTTPException(404,detail="No Chats Found")
 
-def add_user(token,user2):
-    payload = verify_token(token)
-    if payload is None:
-        raise HTTPException(401,detail="Token Missing")
+def add_user(payload,user2):
     user = payload.get("user_name")
     jti = payload.get("jti")
     is_expired(jti)
@@ -40,10 +33,7 @@ def add_user(token,user2):
     return {"message" : f"connected with {user2}"}
 
 
-def get_chat(token,user2):
-    payload = verify_token(token)
-    if payload is None:
-        raise HTTPException(401,detail="Token Missing")
+def get_chat(payload,user2):
     jti = payload.get("jti")
     is_expired(jti) 
     user = payload.get("user_name")
@@ -60,10 +50,7 @@ def get_chat(token,user2):
         return {"message" : f"no contact named {user2}"}
 
 
-def delete_convo(token,user2):
-    payload = verify_token(token)
-    if payload is None:
-        raise HTTPException(401,detail="Token Missing")
+def delete_convo(payload,user2):
     jti = payload.get("jti")
     is_expired(jti) 
     user = payload.get("user_name")

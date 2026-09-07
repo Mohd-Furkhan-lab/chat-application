@@ -51,10 +51,7 @@ def user_info(token):
     return info
 
 
-async def sendmsg(data,token):
-    payload = verify_token(token)
-    if not payload:
-        raise HTTPException(401,detail="Unauthorized")
+async def sendmsg(data,payload):
     jti = payload.get("jti")
     is_expired(jti)
     sender = payload.get("user_name")
