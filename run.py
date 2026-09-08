@@ -5,6 +5,7 @@ from models.messages import Messages
 from models.conversation import Conversation
 from models.group_memebers import Members
 from models.group_chat import Group
+from models.group_msg import GroupMessages
 from fastapi.middleware.cors import CORSMiddleware
 
 BaseModel.metadata.create_all(engine)

@@ -2,7 +2,7 @@ from models.users import add_user,get_user
 from fastapi import HTTPException
 from utlis.username_generator import random_username
 from auth.jwt_token import create_access_token,create_refresh_token,verify_token,new_token
-from connection_manager.manage_connection import manager
+from connection_manager.user_connection import manager
 from models.conversation import get_convo,add_new_convo
 from models.token_blacklist import revoketoken,is_revoked
 import bcrypt

@@ -1,7 +1,7 @@
 from fastapi.websockets import WebSocket
 from fastapi import APIRouter
 from auth.jwt_token import verify_token
-from connection_manager.manage_connection import manager
+from connection_manager.user_connection import manager
 
 
 ws = APIRouter(prefix="/ws")

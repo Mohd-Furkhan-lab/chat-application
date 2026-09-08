@@ -5,7 +5,7 @@ from models.users import get_user
 from services.user_services import is_expired
 from db.database import Session_Local
 from models.messages import add_msg
-from connection_manager.manage_connection import manager
+from connection_manager.user_connection import manager
 
 def getallchats(payload):
     user = payload.get("user_name")

@@ -7,3 +7,6 @@ class CreateGroup(BaseModel):
 class  Updatetype(BaseModel):
     gname :  str
     new_type : str
+
+class SendMsg(BaseModel):
+    msg : str
