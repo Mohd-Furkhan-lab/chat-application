@@ -5,14 +5,13 @@ from datetime import datetime, UTC
 class GroupMessages(BaseModel):
     __tablename__ = "group_msg"
     msg_id = Column(Integer, primary_key=True, autoincrement=True)
-    group_id = Column(Integer, ForeignKey("group.group_id", ondelete="CASCADE"))
+    group_id = Column(Integer, ForeignKey("groups.group_id", ondelete="CASCADE"))
     sender = Column(String, nullable=False)
     msg = Column(String, nullable=False)
     timestamp = Column(DateTime, default=lambda: datetime.now(UTC))
 
 
-def get_group_msgs(group_id):
-    with Session_Local() as db:
+def get_group_msgs(db,group_id):
         msgs = (
             db.query(GroupMessages.timestamp, GroupMessages.msg, GroupMessages.sender)
             .filter(GroupMessages.group_id == group_id)
@@ -25,16 +24,17 @@ def get_group_msgs(group_id):
         ]
 
 
-def add_group_msg(group_id, sender, msg):
-    with Session_Local() as db:
-        new_msg = GroupMessages(
+def add_group_msg(db,group_id, sender, msg):
+    new_msg = GroupMessages(
             group_id=group_id,
             sender=sender,
             msg=msg
         )
-        db.add(new_msg)
-        db.commit()
+    db.add(new_msg)
+    db.flush()
+    return True
 
 
 def delete_group_msgs(db, group_id):
     db.query(GroupMessages).filter(GroupMessages.group_id == group_id).delete()
+    return True

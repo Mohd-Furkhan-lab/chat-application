@@ -1,6 +1,7 @@
 from models.group_chat import get_group
 from models.group_memebers import get_member,get_members,add_member,update_user_role,remove_group_member
 from models.users import get_user
+from models.group_msg import delete_group_msgs
 from db.database import Session_Local
 from fastapi import HTTPException
 
@@ -57,5 +58,15 @@ def deletemember(groupname,username,is_admin):
             if res is None:
                 raise HTTPException(500,detail="Internal Server Error")
             return {"message" : f"{username} deleted successfully"}
-        
-        
+
+def clearchat(groupname,is_admin):
+    if is_admin:
+        with Session_Local() as db:
+            group = get_group(db,gname=groupname)
+            if group is None :
+                raise HTTPException(404,detail="Group Not Found")
+            res = delete_group_msgs(db,group.group_id)
+            db.commit()
+            if res is None:
+                raise HTTPException(500,detail="Internal Server Error")
+            return {"message" : "Chat Cleared" }

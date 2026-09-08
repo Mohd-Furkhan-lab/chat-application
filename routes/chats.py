@@ -1,6 +1,5 @@
 from fastapi import APIRouter,Request,HTTPException,Depends
-from services.chats_services import getallchats,get_chat,delete_convo,add_user
-from services.user_services import sendmsg
+from services.chats_services import getallchats,get_chat,delete_convo,add_user,sendmsg
 from schemas.user_schemas import Msg
 from dependencies.user_payload import get_current_user
 

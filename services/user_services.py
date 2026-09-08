@@ -4,7 +4,6 @@ from utlis.username_generator import random_username
 from auth.jwt_token import create_access_token,create_refresh_token,verify_token,new_token
 from connection_manager.manage_connection import manager
 from models.conversation import get_convo,add_new_convo
-from models.messages import add_msg
 from models.token_blacklist import revoketoken,is_revoked
 import bcrypt
 import redis
@@ -49,25 +48,6 @@ def user_info(token):
     if info is None:
         raise HTTPException(404,detail="User Not Found")
     return info
-
-
-async def sendmsg(data,payload):
-    jti = payload.get("jti")
-    is_expired(jti)
-    sender = payload.get("user_name")
-    to,msg = data.to,data.msg
-    msg_json = {"from":sender,"message" : msg}
-    user_1,user_2 = sorted([sender,to])
-    convo = get_convo(user_1,user_2)
-    if convo is None:
-        raise HTTPException(404,detail="Chat not found")
-    add_msg(convo.convo_id,sender,msg)
-    is_online = manager.active_connection.get(to)
-    if is_online:
-        await manager.braodcast_msg(msg_json,to)
-        return {"message" : "sent successfully"}
-    else:
-        return {"message" : "user offline"}
 
 
 def refresh(token):
