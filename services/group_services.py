@@ -57,25 +57,22 @@ def update_group_type(data,payload):
         raise HTTPException(500,detail= "Internal Server Error")
     return {"message" : f"Group Type Changed To {data.new_type}"}
 
-def delete_group(group,payload):
-    with Session_Local() as db:
-        group = get_group(db,gname=group)
-        if group == None:
-            raise HTTPException(404,detail="Group Not Exists")
-        member = get_member(payload.get("user_id"),group.group_id)
-        if member.role != "admin":
-            raise HTTPException(403,detail="Forbidden")
-        try:
-            res = remove_group(db,member,group)
-            if res:
-                delete_members(db,res.group_id)
-                db.commit()
+def delete_group(group,is_admin):
+    if is_admin:
+        with Session_Local() as db:
+            group = get_group(db,gname=group)
+            if group == None:
+                raise HTTPException(404,detail="Group Not Exists")
+            try:
+                res = remove_group(db,is_admin,group)
+                if res:
+                    delete_members(db,res.group_id)
+                    db.commit()
                 return {"message" : "group deleted successfully"}
-        except Exception as e:
-            db.rollback()
-            return {"message" : f"an error occured {e}"}
+            except Exception as e:
+                db.rollback()
+                return {"message" : f"an error occured {e}"}
 
-#Memeber Services
 def join_public_group(payload,group):
     with Session_Local() as db:
         group = get_group(db,gname = group)
