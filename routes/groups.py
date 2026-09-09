@@ -16,7 +16,7 @@ def get_group(groupname,payload = Depends(get_current_user)):
     return fetch_group_by_name(payload,groupname)
 
 @groups.get('/{groupname}/chat')
-def get_groupchat(groupname,payload = Depends(get_all_groups)):
+def get_groupchat(groupname,payload = Depends(get_current_user)):
     return getmsgs(payload,groupname)
 
 @groups.post('/')

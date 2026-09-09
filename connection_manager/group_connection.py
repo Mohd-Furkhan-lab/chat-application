@@ -15,8 +15,8 @@ class GroupChat():
 
     async def braodcast_msg(self,groupname,json):
         if groupname in self.connections:
-            group = self.connectionsp[groupname]
-            for ws in list[group.values()]:
+            group = self.connections[groupname]
+            for ws in list(group.values()):
                 await ws.send_json(json)
 
 
