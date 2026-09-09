@@ -31,9 +31,6 @@ def join_group(groupname,payload = Depends(get_current_user)):
 def updatetype(data:Updatetype,payload = Depends(get_current_user)):
     return update_group_type(data,payload)
 
-@groups.delete('/{groupname}')
-def deletegroup(groupname,payload = Depends(get_current_user)):
-    return delete_group(groupname,payload)
 
 @groups.post('/{groupname}/chat')
 async def send_group_msg(groupname,data:SendMsg,payload = Depends(get_current_user)):

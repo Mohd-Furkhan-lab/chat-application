@@ -1,7 +1,7 @@
 from fastapi import APIRouter,Depends
-from dependencies.user_payload import get_current_user
 from dependencies.admin import is_admin
 from services.admin_services import getgroupmembers,addmember,updaterole,deletemember
+from services.group_services import delete_group
 from schemas.group_admin_schema import AddUser,UpdateRole
 
 admin = APIRouter(prefix="/admin",tags=["admin"])
@@ -21,3 +21,7 @@ def update_member_role(groupname,data:UpdateRole,is_admin = Depends(is_admin)):
 @admin.delete('/{groupname}/members/{username}')
 def delete_member(groupname,username,is_admin = Depends(is_admin)):
     return deletemember(groupname,username,is_admin)
+
+@admin.delete('/{groupname}')
+def deletegroup(groupname,is_admin = Depends(is_admin)):
+    return delete_group(groupname,is_admin)
