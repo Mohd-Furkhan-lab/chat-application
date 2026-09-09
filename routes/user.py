@@ -24,14 +24,14 @@ def login(response:Response,data : UserAuth):
         key="access",
         value=access_token,
         httponly=False,
-        secure=False,
+        secure=True,
         samesite="none"
     )
     response.set_cookie(
             key="refresh",
             value=refresh_token,
             httponly=False,
-            secure=False,
+            secure=True,
             samesite="none"
         )
     return {"message" : "logedin successfully"}
@@ -52,7 +52,7 @@ def new_access_token(request:Request,response:Response):
     response.set_cookie(
         key = "access",
         value = new_token,
-        secure = False,
+        secure = True,
         httponly = False,
         samesite="none"
 
