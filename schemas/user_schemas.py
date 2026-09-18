@@ -11,5 +11,6 @@ class Msg(BaseModel):
 class Info(BaseModel):
     user_name : str
     email : str
+    profile_pic : str
 
     model_config = ConfigDict(from_attributes=True)

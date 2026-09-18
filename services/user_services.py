@@ -1,14 +1,24 @@
-from models.users import add_user,get_user
+from models.users import add_user,get_user,add_pic
 from fastapi import HTTPException
 from utlis.username_generator import random_username
 from auth.jwt_token import create_access_token,create_refresh_token,verify_token,new_token
 from connection_manager.user_connection import manager
-from models.conversation import get_convo,add_new_convo
 from models.token_blacklist import revoketoken,is_revoked
 import bcrypt
 import redis
 import time
 import os
+import cloudinary
+from  cloudinary import uploader
+from dotenv import load_dotenv
+
+load_dotenv()
+
+cloudinary.config(
+    cloud_name = os.getenv("cloudinary_name"),
+    api_key = os.getenv("cloudinary_key"),
+    api_secret = os.getenv("cloudinary_secret")
+)
 
 r = redis.from_url(os.getenv("redis_url"))
 
@@ -93,4 +103,20 @@ def is_expired(jti):
     is_exists = r.get(f"blacklist:{jti}")
     if is_exists:
         raise HTTPException(401,detail="Revoked Token")
+    
+def upload_file(file,payload):
+    user = get_user(username=payload.get("user_name"))
+    if user is None:
+        raise HTTPException(404,detail="User Not Found")
+    url = cloudinary.uploader.upload(
+        file,
+        resource_type="auto"
+    )
+    if url is None:
+        raise HTTPException(500,detail="Failed to upload pfp")
+    result = add_pic(payload.get("user_id"),url.get("secure_url"))
+    if result is None:
+        raise HTTPException(500,detail="Internal Server Error")
+    return {"message" : f"new profile pic added to {payload.get("user_name")} profile"}
+
     

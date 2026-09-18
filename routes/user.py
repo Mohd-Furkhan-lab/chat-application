@@ -1,6 +1,7 @@
-from fastapi import APIRouter,Response,Request,HTTPException
-from schemas.user_schemas import UserAuth,Msg,Info
-from services.user_services import new_user,user_login,user_info,refresh,logout
+from fastapi import APIRouter,Response,Request,UploadFile,File,Depends
+from dependencies.user_payload import get_current_user
+from schemas.user_schemas import UserAuth,Info
+from services.user_services import new_user,user_login,user_info,refresh,logout,upload_file
 
 
 users = APIRouter(prefix = "/users",tags = ["users"])
@@ -35,6 +36,10 @@ def login(response:Response,data : UserAuth):
             samesite="none"
         )
     return {"message" : "logedin successfully"}
+
+@users.post('/profile-pic/upload')
+def add_pfp(file:UploadFile = File(...),payload = Depends(get_current_user)):
+    return upload_file(file.file,payload)
 
 @users.post('/logout')
 async def user_logout(request:Request,response:Response):
