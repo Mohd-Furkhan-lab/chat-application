@@ -7,8 +7,9 @@ class Connections():
     def add_connection(self,user_name,ws):
         self.active_connection[user_name] = ws
 
-    def remove_connection(self,user_name):
-        self.active_connection.pop(user_name)
+    def remove_connection(self, user_name, ws):
+        if self.active_connection.get(user_name) is ws:
+            self.active_connection.pop(user_name, None)
 
     async def braodcast_msg(self,json,reciever):
         if reciever in self.active_connection:

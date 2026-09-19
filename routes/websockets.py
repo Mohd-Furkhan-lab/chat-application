@@ -12,8 +12,8 @@ async def connect_websokets(ws : WebSocket):
     token = ws.cookies.get("access")
     is_logeedin = verify_token(token)
     if is_logeedin:
-        manager.add_connection(is_logeedin.get("user_name"),ws)
         await ws.accept()
+        manager.add_connection(is_logeedin.get("user_name"),ws)
         try:
             while True:
                 msg = await ws.receive_text()
