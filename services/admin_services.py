@@ -1,9 +1,10 @@
-from models.group_chat import get_group
+from models.group_chat import get_group,add_pfp
 from models.group_memebers import get_member,get_members,add_member,update_user_role,remove_group_member
 from models.users import get_user
 from models.group_msg import delete_group_msgs
 from config.database  import Session_Local
 from fastapi import HTTPException
+from cloudinary import uploader
 
 def getgroupmembers(groupname,is_admin):
     if is_admin :
@@ -70,3 +71,24 @@ def clearchat(groupname,is_admin):
             if res is None:
                 raise HTTPException(500,detail="Internal Server Error")
             return {"message" : "Chat Cleared" }
+
+def group_pfp(groupname,file,is_admin):
+    if is_admin:
+        with Session_Local() as db:
+            group = get_group(db,gname=groupname)
+            if group is None:
+                raise HTTPException(404,detail="Group Not Found")
+            member = get_member(is_admin.user_id,group.group_id)
+            if member is None:
+                raise HTTPException(401,detail="Not Group Member")
+            if member.role != "admin":
+                raise HTTPException(403,detail="Forbidden")
+            url = uploader.upload(file.file,resource_type="auto")
+            if url is None:
+                raise HTTPException(500,detail="Something Went Wrong")
+            res = add_pfp(db,is_admin,groupname,url.get("secure_url"))
+            db.commit()
+            if res is None:
+                raise HTTPException(500,detail="Internal Server Error")
+            return {"message" : f"profile pic added to {groupname}"}
+            

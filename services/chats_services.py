@@ -90,9 +90,6 @@ async def sendmedia(file,to,payload):
     else:
         return {"message" : "user offline"}
     return {"message" : "sent successfully"}
-    
-    
-
 
 def delete_convo(payload,user2):
     jti = payload.get("jti")

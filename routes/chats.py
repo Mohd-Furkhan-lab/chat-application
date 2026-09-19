@@ -1,6 +1,6 @@
 from fastapi import APIRouter,Depends,UploadFile,File,Form
 from services.chats_services import getallchats,get_chat,delete_convo,add_user,sendmsg,sendmedia
-from schemas.user_schemas import Msg,Media
+from schemas.user_schemas import Msg
 from dependencies.user_payload import get_current_user
 
 chats = APIRouter(prefix="/chat",tags=["chats"])

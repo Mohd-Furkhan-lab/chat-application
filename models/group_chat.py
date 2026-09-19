@@ -10,6 +10,7 @@ class Group(BaseModel):
     created_by = Column(Integer,ForeignKey("users.user_id",ondelete="CASCADE"))
     created_at = Column(DateTime,default=lambda: datetime.now(UTC))
     no_of_members = Column(Integer,nullable=False,default=0)
+    group_pfp = Column(String,nullable=True)
     type = Column(String,nullable=False)
 
 def get_joined_groups(uid):
@@ -55,4 +56,10 @@ def change_type(is_admin,gname,new_type):
             group.type = new_type
             db.commit()
             return True
-        
+
+def add_pfp(db,is_admin,gname,url):
+    if is_admin:
+        group = db.query(Group).filter(Group.group_name == gname).first()
+        group.group_pfp = url
+        db.flush()
+        return group
