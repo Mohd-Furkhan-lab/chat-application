@@ -1,4 +1,4 @@
-from db.database import BaseModel,Session_Local
+from config.database  import BaseModel,Session_Local
 from sqlalchemy import Column,Integer,String,Boolean
 
 class TokenBlacklist(BaseModel):

@@ -1,12 +1,13 @@
 from fastapi import HTTPException
-from models.conversation import get_chats,get_convo,clear_convo,add_new_convo,Conversation
+from models.conversation import get_chats,get_convo,clear_convo,add_new_convo
 from models.messages import get_msg
 from models.users import get_user
 from services.user_services import is_expired
-from db.database import Session_Local
-from models.messages import add_msg
-from models.users import User
+from config.database  import Session_Local
+from models.messages import add_msg,add_media
+from cloudinary import uploader
 from connection_manager.user_connection import manager
+from utlis.media_types import MediaType
 
 def getallchats(payload):
     user = payload.get("user_name")
@@ -68,6 +69,30 @@ async def sendmsg(data,payload):
         return {"message" : "sent successfully"}
     else:
         return {"message" : "user offline"}
+
+async def sendmedia(file,to,payload):
+    user1,user2 = sorted([to,payload.get("user_name")])
+    convo = get_convo(user1,user2)
+    if convo is None:
+        raise HTTPException(404,detail="Chat not found")
+    file_type = file.content_type.split("/", 1)[0]
+    try:
+        media_type = MediaType(file_type)
+    except ValueError:
+        raise HTTPException(status_code=400,detail="Unsupported media type")
+    url = uploader.upload(file.file,resource_type="auto")
+    if url is None:
+        raise HTTPException(500,detail="Oops cant send the media")
+    add_media(convo.convo_id,payload.get("user_name"),url.get("secure_url"),media_type)
+    msg_json = {"from":payload.get("user_name"),"message" : url.get("secure_url")}
+    if to in manager.active_connection:
+        await manager.braodcast_msg(msg_json,to)
+    else:
+        return {"message" : "user offline"}
+    return {"message" : "sent successfully"}
+    
+    
+
 
 def delete_convo(payload,user2):
     jti = payload.get("jti")

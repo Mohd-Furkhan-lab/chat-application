@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from models.group_msg import get_group_msgs,add_group_msg,delete_group_msgs
 from models.group_memebers import get_member
 from models.group_chat import get_group
-from db.database import Session_Local
+from config.database  import Session_Local
 from connection_manager.group_connection import group_manager
 
 

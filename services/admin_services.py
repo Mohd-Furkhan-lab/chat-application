@@ -2,7 +2,7 @@ from models.group_chat import get_group
 from models.group_memebers import get_member,get_members,add_member,update_user_role,remove_group_member
 from models.users import get_user
 from models.group_msg import delete_group_msgs
-from db.database import Session_Local
+from config.database  import Session_Local
 from fastapi import HTTPException
 
 def getgroupmembers(groupname,is_admin):

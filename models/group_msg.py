@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String, Integer, ForeignKey, DateTime
-from db.database import BaseModel, Session_Local
+from config.database  import BaseModel, Session_Local
 from datetime import datetime, UTC
 
 class GroupMessages(BaseModel):

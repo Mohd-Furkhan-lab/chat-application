@@ -1,4 +1,4 @@
-from db.database import Session_Local,BaseModel
+from config.database  import Session_Local,BaseModel
 from sqlalchemy import Column,String,Integer,ForeignKey,DateTime
 from datetime import datetime,UTC
 from models.users import User

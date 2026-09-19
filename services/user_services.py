@@ -5,22 +5,10 @@ from auth.jwt_token import create_access_token,create_refresh_token,verify_token
 from connection_manager.user_connection import manager
 from models.token_blacklist import revoketoken,is_revoked
 import bcrypt
-import redis
 import time
-import os
-import cloudinary
-from  cloudinary import uploader
-from dotenv import load_dotenv
+from config.redis import r
+from cloudinary import uploader
 
-load_dotenv()
-
-cloudinary.config(
-    cloud_name = os.getenv("cloudinary_name"),
-    api_key = os.getenv("cloudinary_key"),
-    api_secret = os.getenv("cloudinary_secret")
-)
-
-r = redis.from_url(os.getenv("redis_url"))
 
 def new_user(data):
     email,password = data.email,data.password
@@ -108,7 +96,7 @@ def upload_file(file,payload):
     user = get_user(username=payload.get("user_name"))
     if user is None:
         raise HTTPException(404,detail="User Not Found")
-    url = cloudinary.uploader.upload(
+    url = uploader.upload(
         file,
         resource_type="auto"
     )
@@ -118,5 +106,3 @@ def upload_file(file,payload):
     if result is None:
         raise HTTPException(500,detail="Internal Server Error")
     return {"message" : f"new profile pic added to {payload.get("user_name")} profile"}
-
-    

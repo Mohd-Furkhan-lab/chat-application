@@ -1,11 +1,13 @@
 from app.main import get_app
-from db.database import BaseModel,engine
+from config.database import BaseModel,engine
 from models.users import User
 from models.messages import Messages
 from models.conversation import Conversation
 from models.group_memebers import Members
 from models.group_chat import Group
 from models.group_msg import GroupMessages
+from config.cloudinary import cloudinary
+from config.redis import r
 from fastapi.middleware.cors import CORSMiddleware
 
 BaseModel.metadata.create_all(engine)

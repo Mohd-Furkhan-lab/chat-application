@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from db.database import Session_Local
+from config.database  import Session_Local
 from models.group_chat import get_group,create_group,update_no_of_members,remove_group,change_type,get_joined_groups
 from models.group_memebers import add_member,calculate_no_members,get_member,delete_members
 from models.users import get_user

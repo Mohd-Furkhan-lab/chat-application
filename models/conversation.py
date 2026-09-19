@@ -1,5 +1,5 @@
 from sqlalchemy import Column,String,Integer
-from db.database import BaseModel,Session_Local
+from config.database  import BaseModel,Session_Local
 from sqlalchemy import or_, and_
 from models.users import User
 

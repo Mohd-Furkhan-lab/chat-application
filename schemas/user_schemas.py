@@ -8,6 +8,9 @@ class Msg(BaseModel):
     to : str
     msg : str
 
+class Media(BaseModel):
+    to : str
+
 class Info(BaseModel):
     user_name : str
     email : str

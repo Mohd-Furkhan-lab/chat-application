@@ -18,7 +18,7 @@ async def connect_websokets(ws : WebSocket):
             while True:
                 msg = await ws.receive_text()
         except WebSocketDisconnect:
-            manager.remove_connection(is_logeedin.get("user_name"))
+            manager.remove_connection(is_logeedin.get("user_name"),ws)
 
 
 @ws.websocket('/connect/{groupname}')
