@@ -1,10 +1,11 @@
 from fastapi import HTTPException
-from models.conversation import get_chats,get_convo,clear_convo,add_new_convo
+from models.conversation import get_chats,get_convo,clear_convo,add_new_convo,Conversation
 from models.messages import get_msg
 from models.users import get_user
 from services.user_services import is_expired
 from db.database import Session_Local
 from models.messages import add_msg
+from models.users import User
 from connection_manager.user_connection import manager
 
 def getallchats(payload):
