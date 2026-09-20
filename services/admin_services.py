@@ -1,4 +1,4 @@
-from models.group_chat import get_group,add_pfp
+from models.group_chat import get_group,add_pfp,get_group_info
 from models.group_memebers import get_member,get_members,add_member,update_user_role,remove_group_member
 from models.users import get_user
 from models.group_msg import delete_group_msgs
@@ -16,6 +16,17 @@ def getgroupmembers(groupname,is_admin):
             if memebers is None:
                 return {"message" : "No memebrs"}
             return {"message" : {"members" : [[m[0],m[1]] for m in memebers]}}
+
+def getgroupinfo(groupname,is_admin):
+    if is_admin:
+        with Session_Local() as db:
+            group = get_group_info(db,groupname)
+            if group is None:
+                raise HTTPException(404,detail="Group Not Found")
+            member = get_member(is_admin.user_id,group.group_id)
+            if member.role != "admin":
+                raise HTTPException(403,detail="Unauthorized Admin Only")
+            return {"info" : group}
 
 def addmember(groupname,data,is_admin):
     if is_admin:

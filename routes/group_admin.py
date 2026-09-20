@@ -1,6 +1,6 @@
 from fastapi import APIRouter,Depends,UploadFile,File
 from dependencies.admin import is_admin
-from services.admin_services import getgroupmembers,addmember,updaterole,deletemember,group_pfp
+from services.admin_services import getgroupmembers,addmember,updaterole,deletemember,group_pfp,getgroupinfo
 from services.group_services import delete_group
 from schemas.group_admin_schema import AddUser,UpdateRole
 
@@ -9,6 +9,10 @@ admin = APIRouter(prefix="/admin",tags=["admin"])
 @admin.get('/{groupname}/members')
 def group_members(groupname,is_admin = Depends(is_admin)):
     return getgroupmembers(groupname,is_admin)
+
+@admin.get('/{groupname}/info')
+def get_group_info(groupname,is_admin = Depends(is_admin)):
+    return getgroupinfo(groupname,is_admin)
 
 @admin.post('/{groupname}/members')
 def add_new_member(groupname,data:AddUser,is_admin = Depends(is_admin)):

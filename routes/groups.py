@@ -37,4 +37,4 @@ async def send_group_msg(groupname,data:SendMsg,payload = Depends(get_current_us
 
 @groups.post('/{groupname}/media')
 async def send_group_media(groupname,file : UploadFile = File(...),payload = Depends(get_current_user)):
-    return await sendmedia(payload,file,groupname)
+    return await sendmedia(groupname,file,payload)

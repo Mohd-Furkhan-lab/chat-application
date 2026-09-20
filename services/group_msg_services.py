@@ -65,9 +65,9 @@ async def sendmedia(groupname,file,payload):
         url = uploader.upload(file.file,resource_type="auto")
         if url is None:
             raise HTTPException(500,detail="Oops cant send the media")
-        add_group_media(db,group.group_id,payload.get("user_name"),url.get("scure_url"),media_type)
-        msg_json = {"sender":payload.get("user_name"),"msg" : url.get("secure_ulr")}
-        await group_manager.braodcast_msg(groupname,msg_json)
+        add_group_media(db,group.group_id,payload.get("user_name"),url.get("secure_url"),media_type)
         db.commit()
+        msg_json = {"sender":payload.get("user_name"),"msg" : url.get("secure_url")}
+        await group_manager.braodcast_msg(groupname,msg_json)
         return {"message" : "message sent successfully"}
         

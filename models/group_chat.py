@@ -26,6 +26,14 @@ def get_group(db,gid = None, gname = None,):
         group = db.query(Group).filter(Group.group_name == gname).first()
         return group
 
+def get_group_info(db,groupname):
+    group = db.query(Group).filter(Group.group_name == groupname).first()
+
+    if not group:
+        return None
+
+    return group
+
 def create_group(db,group_name,user_id,type):
     group = Group(
         group_name = group_name,
